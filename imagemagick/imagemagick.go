@@ -68,39 +68,27 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	// Get original logo size
-	// width := mw.GetImageWidth()
-	// height := mw.GetImageHeight()
-
-	// Calculate half the size
-	// hWidth := uint(width / 2)
-	// hHeight := uint(height / 2)
-
 	hWidth := uint(param.Height)
 	hHeight := uint(param.Width)
 
-	// Resize the image using the Lanczos filter
-	// The blur factor is a float, where > 1 is blurry, < 1 is sharp
 	err = mw.ResizeImage(hWidth, hHeight, imagick.FILTER_LANCZOS, 1)
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
 	}
 
-	// Set the compression quality to 95 (high quality = low compression)
 	err = mw.SetImageCompressionQuality(95)
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
 	}
-	//image := mw.GetImageFromMagickWand()
 
 	if err := mw.WriteImage("resized_image.png"); err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
 	}
 
-	imgFile, err := os.Open("resized_image.png") // a QR code image
+	imgFile, err := os.Open("resized_image.png")
 
 	if err != nil {
 		os.Exit(1)
@@ -110,16 +98,13 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 
 	defer imgFile.Close()
 
-	// create a new buffer base on file size
 	fInfo, _ := imgFile.Stat()
 	var size int64 = fInfo.Size()
 	buf := make([]byte, size)
 
-	// read file content into buffer
 	fReader := bufio.NewReader(imgFile)
 	fReader.Read(buf)
 
-	// convert the buffer bytes to base64 string - use buf.Bytes() for new image
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
 	deleteError := deleteFile()
@@ -134,7 +119,6 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 }
 
 func deleteFile() (err error) {
-	// delete file
 	var err1 = os.Remove("resized_image.png")
 	if err1 != nil {
 		return err1
