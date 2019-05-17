@@ -23,6 +23,12 @@ var routes = Routes{
         "/resize",
         imagemagick.Resize,
     },
+    Route{
+        "Reflect",
+        "POST",
+        "/reflect",
+        imagemagick.Reflect,
+    },
 }
 
 func NewRouter() *mux.Router {

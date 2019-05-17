@@ -50,4 +50,29 @@ actions:
         status_code:
           help: Http status code.
           type: int
-  
+  reflect:
+    help: Reflect image.
+    http:
+      port: 3000
+      method: post
+      path: /reflect
+      contentType: application/json
+    arguments:
+      input_image:
+        type: string
+        in: requestBody
+        required: true
+        help: The input image base64 data.
+    output: 
+      type: object
+      contentType: application/json
+      properties:
+        success:
+          help: Returns true or false.
+          type: boolean
+        output_image:
+          help: The base64 data of output image.
+          type: string
+        status_code:
+          help: Http status code.
+          type: int

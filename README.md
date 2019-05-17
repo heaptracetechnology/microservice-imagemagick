@@ -27,6 +27,10 @@ omg build
 ```sh
 $ omg run resize -a input_image=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH>
 ```
+##### Reflect image
+```sh
+$ omg run reflect -a input_image=<IMAGE_BASE64_DATA>
+```
 
 ## License
 ### [MIT](https://choosealicense.com/licenses/mit/)

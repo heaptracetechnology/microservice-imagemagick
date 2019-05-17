@@ -23,7 +23,7 @@ type Message struct {
 	StatusCode int    `json:"statuscode"`
 }
 
-//Resize
+//Resize image
 func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imagick.Initialize()
@@ -46,7 +46,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("./uploads/inputfile.jpg")
+	f, err := os.Create("./uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -62,7 +62,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	err = mw.ReadImage("./uploads/inputfile.jpg")
+	err = mw.ReadImage("./uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -83,12 +83,111 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	if err := mw.WriteImage("resized_image.png"); err != nil {
+	if err := mw.WriteImage("output_image.png"); err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
 	}
 
-	imgFile, err := os.Open("resized_image.png")
+	imgFile, err := os.Open("output_image.png")
+
+	if err != nil {
+		os.Exit(1)
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	defer imgFile.Close()
+
+	fInfo, _ := imgFile.Stat()
+	var size int64 = fInfo.Size()
+	buf := make([]byte, size)
+
+	fReader := bufio.NewReader(imgFile)
+	fReader.Read(buf)
+
+	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
+
+	deleteError := deleteFile()
+	if deleteError != nil {
+		result.WriteErrorResponse(responseWriter, deleteError)
+		return
+	}
+
+	message := Message{"true", imgBase64Str, http.StatusOK}
+	bytes, _ := json.Marshal(message)
+	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
+}
+
+//Reflect image
+func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
+
+	imagick.Initialize()
+	defer imagick.Terminate()
+
+	mw := imagick.NewMagickWand()
+
+	decoder := json.NewDecoder(request.Body)
+	var param ImageMagick
+	decodeErr := decoder.Decode(&param)
+	if decodeErr != nil {
+		result.WriteErrorResponse(responseWriter, decodeErr)
+		return
+	}
+
+	dec, err := base64.StdEncoding.DecodeString(param.InputImage)
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	f, err := os.Create("./uploads/input_image.jpg")
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	defer f.Close()
+
+	if _, err := f.Write(dec); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	if err := f.Sync(); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	err = mw.ReadImage("./uploads/input_image.jpg")
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	w := mw.GetImageWidth()
+	h := mw.GetImageHeight()
+
+	mw.SetImageAlphaChannel(imagick.ALPHA_CHANNEL_DEACTIVATE)
+	mwr := mw.Clone()
+
+	mwr.ResizeImage(w, h/2, imagick.FILTER_LANCZOS, 1)
+	mwr.FlipImage()
+
+	mwg := imagick.NewMagickWand()
+	mwg.SetSize(w, h/2)
+	mwg.ReadImage("gradient:white-black")
+
+	mwr.CompositeImage(mwg, imagick.COMPOSITE_OP_COPY_OPACITY, 0, 0)
+
+	mw.AddImage(mwr)
+	mw.SetFirstIterator()
+
+	mwout := mw.AppendImages(true)
+
+	if err := mwout.WriteImage("output_image.png"); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	imgFile, err := os.Open("output_image.png")
 
 	if err != nil {
 		os.Exit(1)
@@ -119,14 +218,14 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 }
 
 func deleteFile() (err error) {
-	var err1 = os.Remove("resized_image.png")
+	var err1 = os.Remove("output_image.png")
 	if err1 != nil {
 		return err1
 	}
 
 	fmt.Println("==> done deleting file")
 
-	var err2 = os.Remove("./uploads/inputfile.jpg")
+	var err2 = os.Remove("./uploads/input_image.jpg")
 	if err2 != nil {
 		return err2
 	}
