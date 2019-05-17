@@ -31,6 +31,10 @@ $ omg run resize -a input_image=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=
 ```sh
 $ omg run reflect -a input_image=<IMAGE_BASE64_DATA>
 ```
+##### Extend image
+```sh
+$ omg run extend -a input_image=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH> -a background_colour=<COLOUR_NAME>
+```
 
 ## License
 ### [MIT](https://choosealicense.com/licenses/mit/)
