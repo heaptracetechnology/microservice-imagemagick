@@ -43,7 +43,7 @@ actions:
       properties:
         success:
           help: Returns true or false.
-          type: string
+          type: boolean
         output_image:
           help: The base64 data of output image.
           type: string
