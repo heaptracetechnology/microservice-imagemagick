@@ -38,7 +38,7 @@ actions:
         required: true
         help: The width for resized image.
     output: 
-      type: string
+      type: object
       contentType: application/json
       properties:
         success:
