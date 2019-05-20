@@ -15,7 +15,7 @@ info:
     url: https://opensource.org/licenses/MIT
 actions:
   resize:
-    help: Resize image from this extensions 'png', 'jpeg' and 'jpg'.
+    help: Resize image.
     http:
       port: 3000
       method: post
