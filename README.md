@@ -25,19 +25,19 @@ omg build
 
 ##### Resize image
 ```sh
-$ omg run resize -a input_image=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH>
+$ omg run resize -a input=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH>
 ```
 ##### Reflect image
 ```sh
-$ omg run reflect -a input_image=<IMAGE_BASE64_DATA>
+$ omg run reflect -a input=<IMAGE_BASE64_DATA>
 ```
 ##### Extend image
 ```sh
-$ omg run extend -a input_image=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH> -a background_colour=<COLOUR_NAME>
+$ omg run extend -a input=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH> -a background_colour=<COLOUR_NAME>
 ```
 ##### Transparent image
 ```sh
-$ omg run transparent -a input_image=<IMAGE_BASE64_DATA> -a transparent_colour=<COLOUR_NAME>
+$ omg run transparent -a input=<IMAGE_BASE64_DATA> -a transparent_colour=<COLOUR_NAME>
 ```
 
 ## License

@@ -22,7 +22,7 @@ actions:
       path: /resize
       contentType: application/json
     arguments:
-      input_image:
+      input:
         type: string
         in: requestBody
         required: true
@@ -44,7 +44,7 @@ actions:
         success:
           help: Returns true or false.
           type: boolean
-        output_image:
+        output:
           help: The base64 data of output image.
           type: string
         status_code:
@@ -58,7 +58,7 @@ actions:
       path: /reflect
       contentType: application/json
     arguments:
-      input_image:
+      input:
         type: string
         in: requestBody
         required: true
@@ -70,7 +70,7 @@ actions:
         success:
           help: Returns true or false.
           type: boolean
-        output_image:
+        output:
           help: The base64 data of output image.
           type: string
         status_code:
@@ -84,7 +84,7 @@ actions:
       path: /extend
       contentType: application/json
     arguments:
-      input_image:
+      input:
         type: string
         in: requestBody
         required: true
@@ -111,7 +111,7 @@ actions:
         success:
           help: Returns true or false.
           type: boolean
-        output_image:
+        output:
           help: The base64 data of output image.
           type: string
         status_code:
@@ -125,7 +125,7 @@ actions:
       path: /transparent
       contentType: application/json
     arguments:
-      input_image:
+      input:
         type: string
         in: requestBody
         required: true
@@ -142,7 +142,7 @@ actions:
         success:
           help: Returns true or false.
           type: boolean
-        output_image:
+        output:
           help: The base64 data of output image.
           type: string
         status_code:

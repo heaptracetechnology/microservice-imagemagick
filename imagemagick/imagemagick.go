@@ -12,7 +12,7 @@ import (
 
 //ImageMagick struct
 type ImageMagick struct {
-	InputImage        string `json:"input_image,omitempty"`
+	InputImage        string `json:"input,omitempty"`
 	Height            int    `json:"height,omitempty"`
 	Width             int    `json:"width,omitempty"`
 	Colour            string `json:"background_colour,omitempty"`
@@ -22,7 +22,7 @@ type ImageMagick struct {
 //Message struct
 type Message struct {
 	Success    string `json:"success"`
-	Message    string `json:"message"`
+	Message    string `json:"output"`
 	StatusCode int    `json:"statuscode"`
 }
 
