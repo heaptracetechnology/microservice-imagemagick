@@ -29,17 +29,17 @@ var routes = Routes{
         "/reflect",
         imagemagick.Reflect,
     },
-    // Route{
-    //     "Rotate",
-    //     "POST",
-    //     "/rotate",
-    //     imagemagick.Rotate,
-    // },
     Route{
         "Extend",
         "POST",
         "/extend",
         imagemagick.Extend,
+    },
+    Route{
+        "Transparent",
+        "POST",
+        "/transparent",
+        imagemagick.Transparent,
     },
 }
 

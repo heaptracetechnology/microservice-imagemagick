@@ -4,20 +4,22 @@ import (
 	"bufio"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	result "github.com/heaptracetechnology/microservice-imagemagick/result"
 	"gopkg.in/gographics/imagick.v2/imagick"
 	"net/http"
 	"os"
 )
 
+//ImageMagick struct
 type ImageMagick struct {
-	InputImage string `json:"input_image,omitempty"`
-	Height     int    `json:"height,omitempty"`
-	Width      int    `json:"width,omitempty"`
-	Colour     string `json:"background_colour,omitempty"`
+	InputImage        string `json:"input_image,omitempty"`
+	Height            int    `json:"height,omitempty"`
+	Width             int    `json:"width,omitempty"`
+	Colour            string `json:"background_colour,omitempty"`
+	TransparentColour string `json:"transparent_colour,omitempty"`
 }
 
+//Message struct
 type Message struct {
 	Success    string `json:"success"`
 	Message    string `json:"message"`
@@ -315,19 +317,97 @@ func Extend(responseWriter http.ResponseWriter, request *http.Request) {
 	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
 }
 
+//Transparent Image
+func Transparent(responseWriter http.ResponseWriter, request *http.Request) {
+	imagick.Initialize()
+	defer imagick.Terminate()
+
+	mw := imagick.NewMagickWand()
+
+	decoder := json.NewDecoder(request.Body)
+	var param ImageMagick
+	decodeErr := decoder.Decode(&param)
+	if decodeErr != nil {
+		result.WriteErrorResponse(responseWriter, decodeErr)
+		return
+	}
+
+	dec, err := base64.StdEncoding.DecodeString(param.InputImage)
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	f, err := os.Create("./uploads/input_image.jpg")
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	defer f.Close()
+
+	if _, err := f.Write(dec); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	if err := f.Sync(); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	err = mw.ReadImage("./uploads/input_image.jpg")
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	target := imagick.NewPixelWand()
+	target.SetColor(param.TransparentColour)
+	mw.TransparentPaintImage(target, 0, 10, false)
+
+	if err := mw.WriteImage("output_image.png"); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	imgFile, err := os.Open("output_image.png")
+
+	if err != nil {
+		os.Exit(1)
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	defer imgFile.Close()
+
+	fInfo, _ := imgFile.Stat()
+	var size int64 = fInfo.Size()
+	buf := make([]byte, size)
+
+	fReader := bufio.NewReader(imgFile)
+	fReader.Read(buf)
+
+	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
+
+	deleteError := deleteFile()
+	if deleteError != nil {
+		result.WriteErrorResponse(responseWriter, deleteError)
+		return
+	}
+
+	message := Message{"true", imgBase64Str, http.StatusOK}
+	bytes, _ := json.Marshal(message)
+	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
+}
+
 func deleteFile() (err error) {
-	var err1 = os.Remove("output_image.png")
-	if err1 != nil {
-		return err1
+	var deleteOutputImage = os.Remove("output_image.png")
+	if deleteOutputImage != nil {
+		return deleteOutputImage
 	}
 
-	fmt.Println("==> done deleting file")
-
-	var err2 = os.Remove("./uploads/input_image.jpg")
-	if err2 != nil {
-		return err2
+	var deleteInputImage = os.Remove("./uploads/input_image.jpg")
+	if deleteInputImage != nil {
+		return deleteInputImage
 	}
-
-	fmt.Println("==> done deleting file")
 	return nil
 }
