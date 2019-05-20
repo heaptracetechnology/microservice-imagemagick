@@ -49,7 +49,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("./uploads/input_image.jpg")
+	f, err := os.Create("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -65,7 +65,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	err = mw.ReadImage("./uploads/input_image.jpg")
+	err = mw.ReadImage("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -143,7 +143,7 @@ func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("./uploads/input_image.jpg")
+	f, err := os.Create("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -159,7 +159,7 @@ func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	err = mw.ReadImage("./uploads/input_image.jpg")
+	err = mw.ReadImage("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -246,7 +246,7 @@ func Extend(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("./uploads/input_image.jpg")
+	f, err := os.Create("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -262,7 +262,7 @@ func Extend(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	err = mw.ReadImage("./uploads/input_image.jpg")
+	err = mw.ReadImage("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -338,7 +338,7 @@ func Transparent(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("./uploads/input_image.jpg")
+	f, err := os.Create("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -354,7 +354,7 @@ func Transparent(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	err = mw.ReadImage("./uploads/input_image.jpg")
+	err = mw.ReadImage("../uploads/input_image.jpg")
 	if err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
@@ -405,7 +405,7 @@ func deleteFile() (err error) {
 		return deleteOutputImage
 	}
 
-	var deleteInputImage = os.Remove("./uploads/input_image.jpg")
+	var deleteInputImage = os.Remove("../uploads/input_image.jpg")
 	if deleteInputImage != nil {
 		return deleteInputImage
 	}
