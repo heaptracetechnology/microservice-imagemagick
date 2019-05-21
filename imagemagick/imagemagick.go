@@ -49,11 +49,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("../uploads/input_image.jpg")
-	if err != nil {
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	f, _ := os.Create("../uploads/input_image.jpg")
 	defer f.Close()
 
 	if _, err := f.Write(dec); err != nil {
@@ -91,13 +87,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	imgFile, err := os.Open("output_image.png")
-
-	if err != nil {
-		os.Exit(1)
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	imgFile, _ := os.Open("output_image.png")
 
 	defer imgFile.Close()
 
@@ -110,11 +100,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteError := deleteFile()
-	if deleteError != nil {
-		result.WriteErrorResponse(responseWriter, deleteError)
-		return
-	}
+	deleteFile()
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
@@ -143,11 +129,7 @@ func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("../uploads/input_image.jpg")
-	if err != nil {
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	f, _ := os.Create("../uploads/input_image.jpg")
 	defer f.Close()
 
 	if _, err := f.Write(dec); err != nil {
@@ -190,13 +172,7 @@ func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	imgFile, err := os.Open("output_image.png")
-
-	if err != nil {
-		os.Exit(1)
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	imgFile, _ := os.Open("output_image.png")
 
 	defer imgFile.Close()
 
@@ -209,11 +185,7 @@ func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteError := deleteFile()
-	if deleteError != nil {
-		result.WriteErrorResponse(responseWriter, deleteError)
-		return
-	}
+	deleteFile()
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
@@ -246,11 +218,7 @@ func Extend(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("../uploads/input_image.jpg")
-	if err != nil {
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	f, _ := os.Create("../uploads/input_image.jpg")
 	defer f.Close()
 
 	if _, err := f.Write(dec); err != nil {
@@ -287,13 +255,7 @@ func Extend(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	imgFile, err := os.Open("output_image.png")
-
-	if err != nil {
-		os.Exit(1)
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	imgFile, _ := os.Open("output_image.png")
 
 	defer imgFile.Close()
 
@@ -306,11 +268,7 @@ func Extend(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteError := deleteFile()
-	if deleteError != nil {
-		result.WriteErrorResponse(responseWriter, deleteError)
-		return
-	}
+	deleteFile()
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
@@ -338,11 +296,7 @@ func Transparent(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	f, err := os.Create("../uploads/input_image.jpg")
-	if err != nil {
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	f, _ := os.Create("../uploads/input_image.jpg")
 	defer f.Close()
 
 	if _, err := f.Write(dec); err != nil {
@@ -369,13 +323,7 @@ func Transparent(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	imgFile, err := os.Open("output_image.png")
-
-	if err != nil {
-		os.Exit(1)
-		result.WriteErrorResponse(responseWriter, err)
-		return
-	}
+	imgFile, _ := os.Open("output_image.png")
 
 	defer imgFile.Close()
 
@@ -388,26 +336,14 @@ func Transparent(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteError := deleteFile()
-	if deleteError != nil {
-		result.WriteErrorResponse(responseWriter, deleteError)
-		return
-	}
+	deleteFile()
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
 	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
 }
 
-func deleteFile() (err error) {
-	var deleteOutputImage = os.Remove("output_image.png")
-	if deleteOutputImage != nil {
-		return deleteOutputImage
-	}
-
-	var deleteInputImage = os.Remove("../uploads/input_image.jpg")
-	if deleteInputImage != nil {
-		return deleteInputImage
-	}
-	return nil
+func deleteFile() {
+	os.Remove("output_image.png")
+	os.Remove("../uploads/input_image.jpg")
 }
