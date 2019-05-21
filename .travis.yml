@@ -1,23 +1,18 @@
 language: go
-sudo: false
+sudo: true
 go:
   - 1.11.x
   - tip
 
 before_install:
-  - sudo apt install wget
-  - cd && \
-    wget https://github.com/ImageMagick/ImageMagick6/archive/6.9.10-11.tar.gz && \
-    tar xvzf 6.9.10-11.tar.gz && \
-    cd ImageMagick* && \
-    ./configure \
-        --without-magick-plus-plus \
-        --without-perl \
-        --disable-openmp \
-        --with-gvc=no \
-        --disable-docs && \
-    make -j$(nproc) && make install && \
-    ldconfig /usr/local/lib
+  - cd
+  - wget https://github.com/ImageMagick/ImageMagick6/archive/6.9.10-11.tar.gz
+  - tar xvzf 6.9.10-11.tar.gz
+  - cd ImageMagick*
+  - ./configure --without-magick-plus-plus --without-perl --disable-openmp --with-gvc=no --disable-docs
+  - make -j$(nproc)
+  - make install
+  - ldconfig /usr/local/lib
   - go get -t -v ./...
 
 script:
