@@ -11,8 +11,8 @@ before_install:
   - tar xvzf 6.9.10-11.tar.gz
   - cd ImageMagick*
   - ./configure --without-magick-plus-plus --without-perl --disable-openmp --with-gvc=no --disable-docs
-  - make -j$(nproc)
-  - make install
+  - sudo make -j$(nproc)
+  - sudo make install
   - sudo ldconfig /usr/local/lib
   - go get -t -v ./...
 
