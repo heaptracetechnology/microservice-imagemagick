@@ -18,6 +18,8 @@ before_install:
   - go get -t -v ./...
 
 script:
+  - cd ..
+  - pwd
   - ./go.test.sh
 
 after_success:
