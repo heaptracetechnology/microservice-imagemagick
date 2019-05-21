@@ -13,7 +13,7 @@ before_install:
   - ./configure --without-magick-plus-plus --without-perl --disable-openmp --with-gvc=no --disable-docs
   - make -j$(nproc)
   - make install
-  - ldconfig /usr/local/lib
+  - sudo ldconfig /usr/local/lib
   - go get -t -v ./...
 
 script:
