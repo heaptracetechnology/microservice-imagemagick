@@ -1,11 +1,9 @@
 package imagemagick
 
 import (
-	"encoding/base64"
-	//"fmt"
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
-	//"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"io/ioutil"
@@ -22,6 +20,34 @@ func Encodebase64(path string) (string, error) {
 	}
 	return base64.StdEncoding.EncodeToString(buff), nil
 }
+
+var _ = Describe("Imagemagick resize", func() {
+
+	base64data := "" //Encodebase64("../uploads/mask.png")
+
+	imageMagick := ImageMagick{InputImage: base64data, Height: 700, Width: 500}
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/resize", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(Resize)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Resize the image", func() {
+		Context("resize image", func() {
+			It("Should result http.StatusBadRequest", func() {
+				Expect(http.StatusBadRequest).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
 
 var _ = Describe("Imagemagick resize", func() {
 
