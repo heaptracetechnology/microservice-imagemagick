@@ -5,6 +5,7 @@ go:
   - tip
 
 before_install:
+  - pwd
   - cd
   - sudo apt-get install wget
   - wget https://github.com/ImageMagick/ImageMagick6/archive/6.9.10-11.tar.gz
