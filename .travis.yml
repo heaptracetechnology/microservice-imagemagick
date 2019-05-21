@@ -15,11 +15,10 @@ before_install:
   - sudo make -j$(nproc)
   - sudo make install
   - sudo ldconfig /usr/local/lib
+  - cd /home/travis/gopath/src/github.com/heaptracetechnology/microservice-imagemagick
   - go get -t -v ./...
 
 script:
-  - cd ..
-  - pwd
   - ./go.test.sh
 
 after_success:
