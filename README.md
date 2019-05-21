@@ -2,6 +2,8 @@
 An OMG service for ImageMagick, it is for displaying, converting, and editing raster image and vector image files.
 
 [![Open Microservice Guide](https://img.shields.io/badge/OMG-enabled-brightgreen.svg?style=for-the-badge)](https://microservice.guide)
+[![Build Status](https://travis-ci.com/heaptracetechnology/microservice-imagemagick.svg?branch=master)](https://travis-ci.com/heaptracetechnology/microservice-imagemagick)
+[![codecov](https://codecov.io/gh/heaptracetechnology/microservice-imagemagick/branch/master/graph/badge.svg)](https://codecov.io/gh/heaptracetechnology/microservice-imagemagick)
 <!-- [![GolangCI](https://golangci.com/badges/github.com/golangci/golangci-web.svg)](https://golangci.com) -->
 
 
