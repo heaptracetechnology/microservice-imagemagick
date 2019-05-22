@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	result "github.com/heaptracetechnology/microservice-imagemagick/result"
 	"gopkg.in/gographics/imagick.v2/imagick"
 	"net/http"
@@ -17,6 +18,8 @@ type ImageMagick struct {
 	Width             int    `json:"width,omitempty"`
 	Colour            string `json:"background_colour,omitempty"`
 	TransparentColour string `json:"transparent_colour,omitempty"`
+	OutputExtension   string `json:"output_extension,omitempty"`
+	InputExtension    string `json:"input_extension,omitempty"`
 }
 
 //Message struct
@@ -100,7 +103,7 @@ func Resize(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteFile()
+	deleteFile("../uploads/input_image.jpg", "output_image.png")
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
@@ -185,7 +188,7 @@ func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteFile()
+	deleteFile("../uploads/input_image.jpg", "output_image.png")
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
@@ -268,7 +271,7 @@ func Extend(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteFile()
+	deleteFile("../uploads/input_image.jpg", "output_image.png")
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
@@ -336,14 +339,87 @@ func Transparent(responseWriter http.ResponseWriter, request *http.Request) {
 
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
-	deleteFile()
+	deleteFile("../uploads/input_image.jpg", "output_image.png")
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
 	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
 }
 
-func deleteFile() {
-	os.Remove("output_image.png")
-	os.Remove("../uploads/input_image.jpg")
+//ImageFormat conversion
+func ImageFormat(responseWriter http.ResponseWriter, request *http.Request) {
+	mw := imagick.NewMagickWand()
+	mw.SetSize(640, 480)
+
+	decoder := json.NewDecoder(request.Body)
+	var param ImageMagick
+	decodeErr := decoder.Decode(&param)
+	if decodeErr != nil {
+		result.WriteErrorResponse(responseWriter, decodeErr)
+		return
+	}
+
+	dec, err := base64.StdEncoding.DecodeString(param.InputImage)
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	inputImageName := "../uploads/input_image." + param.InputExtension
+	f, _ := os.Create(inputImageName)
+	defer f.Close()
+
+	if _, err := f.Write(dec); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	if err := f.Sync(); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	err = mw.ReadImage(inputImageName)
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	formatErr := mw.SetFormat(param.OutputExtension)
+	if formatErr != nil {
+		result.WriteErrorResponse(responseWriter, formatErr)
+		return
+
+	}
+
+	outputImageName := "output_image." + param.OutputExtension
+	fmt.Println("outputImageName :::", outputImageName)
+
+	if err := mw.WriteImage(outputImageName); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	imgFile, _ := os.Open(outputImageName)
+
+	defer imgFile.Close()
+
+	fInfo, _ := imgFile.Stat()
+	var size int64 = fInfo.Size()
+	buf := make([]byte, size)
+
+	fReader := bufio.NewReader(imgFile)
+	fReader.Read(buf)
+
+	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
+
+	deleteFile(inputImageName, outputImageName)
+
+	message := Message{"true", imgBase64Str, http.StatusOK}
+	bytes, _ := json.Marshal(message)
+	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
+}
+
+func deleteFile(inputImage, outputImage string) {
+	os.Remove(inputImage)
+	os.Remove(outputImage)
 }

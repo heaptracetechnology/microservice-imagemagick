@@ -41,7 +41,10 @@ $ omg run extend -a input=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH
 ```sh
 $ omg run transparent -a input=<IMAGE_BASE64_DATA> -a transparent_colour=<COLOUR_NAME>
 ```
-
+##### Format image
+```sh
+$ omg run format -a input=<IMAGE_BASE64_DATA> -a input_extension=<INPUT_EXTENSION> -a output_extension=<OUTPUT_EXTENSION>
+```
 ## License
 ### [MIT](https://choosealicense.com/licenses/mit/)
 

@@ -41,6 +41,12 @@ var routes = Routes{
         "/transparent",
         imagemagick.Transparent,
     },
+    Route{
+        "ImageFormat",
+        "POST",
+        "/format",
+        imagemagick.ImageFormat,
+    },
 }
 
 func NewRouter() *mux.Router {

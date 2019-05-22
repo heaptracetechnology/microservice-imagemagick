@@ -148,3 +148,39 @@ actions:
         status_code:
           help: Http status code.
           type: int
+  format:
+    help: Convert image from one format to another.
+    http:
+      port: 3000
+      method: post
+      path: /format
+      contentType: application/json
+    arguments:
+      input:
+        type: string
+        in: requestBody
+        required: true
+        help: The input image base64 data.
+      input_extension:
+        type: string
+        in: requestBody
+        required: true
+        help: The input image format.
+      output_extension:
+        type: string
+        in: requestBody
+        required: true
+        help: The output image format.
+    output:
+      type: object
+      contentType: application/json
+      properties:
+        success:
+          help: Returns true or false.
+          type: boolean
+        output:
+          help: The base64 data of output image.
+          type: string
+        status_code:
+          help: Http status code.
+          type: int

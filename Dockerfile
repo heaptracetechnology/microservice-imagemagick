@@ -26,6 +26,8 @@ RUN cd && \
 	make -j$(nproc) && make install && \
 	ldconfig /usr/local/lib
 
+RUN apt-get update && apt-get -y install ghostscript && apt-get clean
+
 RUN go get gopkg.in/gographics/imagick.v2/imagick
 
 RUN go get github.com/gorilla/mux
