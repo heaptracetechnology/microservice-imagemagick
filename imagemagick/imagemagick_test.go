@@ -348,3 +348,266 @@ var _ = Describe("Imagemagick Transparent", func() {
 		})
 	})
 })
+
+var _ = Describe("Imagemagick Image Format ", func() {
+
+	base64data := ""
+
+	imageMagick := ImageMagick{InputImage: base64data, InputExtension: "png", OutputExtension: "pdf"}
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/format", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(ImageFormat)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusBadRequest", func() {
+				Expect(http.StatusBadRequest).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Image Format with invalid args", func() {
+
+	imageMagick := []byte(`{"status":false}`)
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/format", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(ImageFormat)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusBadRequest", func() {
+				Expect(http.StatusBadRequest).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Image Format", func() {
+
+	base64data, _ := Encodebase64("../uploads/mask.png")
+
+	imageMagick := ImageMagick{InputImage: base64data, InputExtension: "png", OutputExtension: "pdf"}
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/format", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(ImageFormat)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusOK", func() {
+				Expect(http.StatusOK).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Oil Paint ", func() {
+
+	base64data := ""
+
+	imageMagick := ImageMagick{InputImage: base64data, Radius: 2.2}
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/oilpaint", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(OilPaint)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusBadRequest", func() {
+				Expect(http.StatusBadRequest).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Oil Paint with invalid args", func() {
+
+	imageMagick := []byte(`{"status":false}`)
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/oilpaint", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(OilPaint)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusBadRequest", func() {
+				Expect(http.StatusBadRequest).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Oil Paint", func() {
+
+	base64data, _ := Encodebase64("../uploads/mask.png")
+
+	imageMagick := ImageMagick{InputImage: base64data, Radius: 2.2}
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/oilpaint", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(OilPaint)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusOK", func() {
+				Expect(http.StatusOK).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Custom ", func() {
+
+	base64data := ""
+
+	imageMagick := CustomArgs{InputImage: base64data}
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/oilpaint", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(OilPaint)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusBadRequest", func() {
+				Expect(http.StatusBadRequest).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Custom with invalid args", func() {
+
+	imageMagick := []byte(`{"status":false}`)
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/custom", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(Custom)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusBadRequest", func() {
+				Expect(http.StatusBadRequest).To(Equal(recorder.Code))
+			})
+		})
+	})
+})
+
+var _ = Describe("Imagemagick Custom", func() {
+
+	base64data, _ := Encodebase64("../uploads/mask.png")
+
+	var customInput = []Function{
+		Function{
+			Name:   "resize",
+			Height: 400,
+			Width:  500,
+		},
+		Function{
+			Name:             "extend",
+			Height:           700,
+			Width:            600,
+			BackgroundColour: "red",
+		},
+		Function{
+			Name: "reflect",
+		},
+	}
+
+	imageMagick := CustomArgs{InputImage: base64data, CustomInput: customInput}
+	requestBody := new(bytes.Buffer)
+	jsonErr := json.NewEncoder(requestBody).Encode(imageMagick)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+
+	request, err := http.NewRequest("POST", "/custom", requestBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(Custom)
+	handler.ServeHTTP(recorder, request)
+
+	Describe("Transparent the image", func() {
+		Context("transparent image", func() {
+			It("Should result http.StatusOK", func() {
+				Expect(http.StatusOK).To(Equal(recorder.Code))
+			})
+		})
+	})
+})

@@ -184,3 +184,65 @@ actions:
         status_code:
           help: Http status code.
           type: int
+  custom:
+    help: Customize the image with multiple image editing operations.
+    http:
+      port: 3000
+      method: post
+      path: /custom
+      contentType: application/json
+    arguments:
+      input:
+        type: string
+        in: requestBody
+        required: true
+        help: The input image base64 data.
+      customize_input:
+        type: list
+        in: requestBody
+        required: true
+        help: The input image format.
+    output:
+      type: object
+      contentType: application/json
+      properties:
+        success:
+          help: Returns true or false.
+          type: boolean
+        output:
+          help: The base64 data of output image.
+          type: string
+        status_code:
+          help: Http status code.
+          type: int
+  oilpaint:
+    help: Applies a special effect filter that simulates an oil painting.
+    http:
+      port: 3000
+      method: post
+      path: /oilpaint
+      contentType: application/json
+    arguments:
+      input:
+        type: string
+        in: requestBody
+        required: true
+        help: The input image base64 data.
+      radius:
+        type: float
+        in: requestBody
+        required: true
+        help: The radius of the circular neighborhood.
+    output:
+      type: object
+      contentType: application/json
+      properties:
+        success:
+          help: Returns true or false.
+          type: boolean
+        output:
+          help: The base64 data of output image.
+          type: string
+        status_code:
+          help: Http status code.
+          type: int

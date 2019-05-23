@@ -13,13 +13,29 @@ import (
 
 //ImageMagick struct
 type ImageMagick struct {
-	InputImage        string `json:"input,omitempty"`
-	Height            int    `json:"height,omitempty"`
-	Width             int    `json:"width,omitempty"`
-	Colour            string `json:"background_colour,omitempty"`
-	TransparentColour string `json:"transparent_colour,omitempty"`
-	OutputExtension   string `json:"output_extension,omitempty"`
-	InputExtension    string `json:"input_extension,omitempty"`
+	InputImage        string  `json:"input,omitempty"`
+	Height            int     `json:"height,omitempty"`
+	Width             int     `json:"width,omitempty"`
+	Colour            string  `json:"background_colour,omitempty"`
+	TransparentColour string  `json:"transparent_colour,omitempty"`
+	OutputExtension   string  `json:"output_extension,omitempty"`
+	InputExtension    string  `json:"input_extension,omitempty"`
+	Radius            float64 `json:"radius,omitempty"`
+}
+
+//CustomArgs struct
+type CustomArgs struct {
+	InputImage  string     `json:"input,omitempty"`
+	CustomInput []Function `json:"customize_input,omitempty"`
+}
+
+//Function struct
+type Function struct {
+	Name             string  `json:"name,omitempty"`
+	Height           int     `json:"height,omitempty"`
+	Width            int     `json:"width,omitempty"`
+	BackgroundColour string  `json:"background_colour,omitempty"`
+	Radius           float64 `json:"radius,omitempty"`
 }
 
 //Message struct
@@ -168,9 +184,9 @@ func Reflect(responseWriter http.ResponseWriter, request *http.Request) {
 	mw.AddImage(mwr)
 	mw.SetFirstIterator()
 
-	mwout := mw.AppendImages(true)
+	mw = mw.AppendImages(true)
 
-	if err := mwout.WriteImage("output_image.png"); err != nil {
+	if err := mw.WriteImage("output_image.png"); err != nil {
 		result.WriteErrorResponse(responseWriter, err)
 		return
 	}
@@ -413,6 +429,204 @@ func ImageFormat(responseWriter http.ResponseWriter, request *http.Request) {
 	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
 
 	deleteFile(inputImageName, outputImageName)
+
+	message := Message{"true", imgBase64Str, http.StatusOK}
+	bytes, _ := json.Marshal(message)
+	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
+}
+
+//Custom image
+func Custom(responseWriter http.ResponseWriter, request *http.Request) {
+
+	imagick.Initialize()
+	defer imagick.Terminate()
+	var err error
+
+	mw := imagick.NewMagickWand()
+
+	decoder := json.NewDecoder(request.Body)
+	var param CustomArgs
+	decodeErr := decoder.Decode(&param)
+	if decodeErr != nil {
+		result.WriteErrorResponse(responseWriter, decodeErr)
+		return
+	}
+
+	dec, err := base64.StdEncoding.DecodeString(param.InputImage)
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	f, _ := os.Create("../uploads/input_image.jpg")
+	defer f.Close()
+
+	if _, err := f.Write(dec); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	if err := f.Sync(); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	err = mw.ReadImage("../uploads/input_image.jpg")
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	customInput := param.CustomInput
+	for i := 0; i < len(customInput); i++ {
+		switch customInput[i].Name {
+		case "resize":
+			if customInput[i].Height > 0 && customInput[i].Width > 0 {
+				err = mw.ResizeImage(uint(customInput[i].Width), uint(customInput[i].Height), imagick.FILTER_LANCZOS, 1)
+				if err != nil {
+					result.WriteErrorResponse(responseWriter, err)
+					return
+				}
+			}
+			break
+		case "extend":
+			if customInput[i].BackgroundColour != "" && customInput[i].Height > 0 && customInput[i].Width > 0 {
+
+				pw := imagick.NewPixelWand()
+
+				pw.SetColor(customInput[i].BackgroundColour)
+
+				w := int(mw.GetImageWidth())
+				h := int(mw.GetImageHeight())
+				mw.SetImageBackgroundColor(pw)
+
+				err = mw.ExtentImage(uint(customInput[i].Width), uint(customInput[i].Height), -(customInput[i].Width-w)/2, -(customInput[i].Height-h)/2)
+				if err != nil {
+					panic(err)
+				}
+			}
+			break
+		case "reflect":
+			if param.InputImage != "" {
+				w := mw.GetImageWidth()
+				h := mw.GetImageHeight()
+
+				mw.SetImageAlphaChannel(imagick.ALPHA_CHANNEL_DEACTIVATE)
+				mwr := mw.Clone()
+
+				mwr.ResizeImage(w, h/2, imagick.FILTER_LANCZOS, 1)
+				mwr.FlipImage()
+
+				mwg := imagick.NewMagickWand()
+				mwg.SetSize(w, h/2)
+				mwg.ReadImage("gradient:white-black")
+
+				mwr.CompositeImage(mwg, imagick.COMPOSITE_OP_COPY_OPACITY, 0, 0)
+
+				mw.AddImage(mwr)
+				mw.SetFirstIterator()
+
+				mw = mw.AppendImages(true)
+			}
+			break
+		case "oilpaint":
+			if customInput[i].Radius > 0 {
+				mw.OilPaintImage(customInput[i].Radius)
+			}
+			break
+		}
+	}
+
+	err = mw.SetImageCompressionQuality(95)
+	if err != nil {
+		panic(err)
+	}
+
+	if err := mw.WriteImage("output_image.png"); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	imgFile, _ := os.Open("output_image.png")
+
+	defer imgFile.Close()
+
+	fInfo, _ := imgFile.Stat()
+	var size int64 = fInfo.Size()
+	buf := make([]byte, size)
+
+	fReader := bufio.NewReader(imgFile)
+	fReader.Read(buf)
+
+	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
+
+	deleteFile("../uploads/input_image.jpg", "output_image.png")
+
+	message := Message{"true", imgBase64Str, http.StatusOK}
+	bytes, _ := json.Marshal(message)
+	result.WriteJsonResponse(responseWriter, bytes, http.StatusOK)
+
+}
+
+//OilPaint image
+func OilPaint(responseWriter http.ResponseWriter, request *http.Request) {
+
+	imagick.Initialize()
+	defer imagick.Terminate()
+
+	mw := imagick.NewMagickWand()
+
+	decoder := json.NewDecoder(request.Body)
+	var param ImageMagick
+	decodeErr := decoder.Decode(&param)
+	if decodeErr != nil {
+		result.WriteErrorResponse(responseWriter, decodeErr)
+		return
+	}
+
+	dec, err := base64.StdEncoding.DecodeString(param.InputImage)
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	f, _ := os.Create("../uploads/input_image.jpg")
+	defer f.Close()
+
+	if _, err := f.Write(dec); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+	if err := f.Sync(); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	err = mw.ReadImage("../uploads/input_image.jpg")
+	if err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	mw.OilPaintImage(param.Radius)
+
+	if err := mw.WriteImage("output_image.png"); err != nil {
+		result.WriteErrorResponse(responseWriter, err)
+		return
+	}
+
+	imgFile, _ := os.Open("output_image.png")
+
+	defer imgFile.Close()
+
+	fInfo, _ := imgFile.Stat()
+	var size int64 = fInfo.Size()
+	buf := make([]byte, size)
+
+	fReader := bufio.NewReader(imgFile)
+	fReader.Read(buf)
+
+	imgBase64Str := base64.StdEncoding.EncodeToString(buf)
+
+	deleteFile("../uploads/input_image.jpg", "output_image.png")
 
 	message := Message{"true", imgBase64Str, http.StatusOK}
 	bytes, _ := json.Marshal(message)
