@@ -45,6 +45,17 @@ $ omg run transparent -a input=<IMAGE_BASE64_DATA> -a transparent_colour=<COLOUR
 ```sh
 $ omg run format -a input=<IMAGE_BASE64_DATA> -a input_extension=<INPUT_EXTENSION> -a output_extension=<OUTPUT_EXTENSION>
 ```
+##### OilPaint image
+```sh
+$ omg run oilpaint -a input=<IMAGE_BASE64_DATA> -a radius=<RADIUS>
+```
+##### Custom image
+```sh
+$ omg run custom -a input=<IMAGE_BASE64_DATA> -a customize_input=<CUSTOMIZE_INPUT>
+```
+##### Custom image Example
+> omg run custom -a input=<IMAGE_BASE64_DATA> -a customize_input='[{"name":"resize","height": 400,"width": 500},{"name":"extend","background_colour": "red","height": 700,"width": 600},{"name":"reflect"},{"name":"oilpaint","radius":"2.6"}]'
+
 ## License
 ### [MIT](https://choosealicense.com/licenses/mit/)
 
