@@ -201,7 +201,7 @@ actions:
         type: list
         in: requestBody
         required: true
-        help: The input image format.
+        help: The input for customize image with multiple image process operations 'oilpaint','extend','resize','reflect'.
     output:
       type: object
       contentType: application/json
