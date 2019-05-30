@@ -54,8 +54,9 @@ $ omg run oilpaint -a input=<IMAGE_BASE64_DATA> -a radius=<RADIUS>
 $ omg run custom -a input=<IMAGE_BASE64_DATA> -a customize_input=<CUSTOMIZE_INPUT>
 ```
 ##### Custom image Example
-> omg run custom -a input=<IMAGE_BASE64_DATA> -a customize_input='[{"name":"resize","height": 400,"width": 500},{"name":"extend","background_colour": "red","height": 700,"width": 600},{"name":"reflect"},{"name":"oilpaint","radius":2.6}]'
-
+```
+$ omg run custom -a input=<IMAGE_BASE64_DATA> -a customize_input='[{"name":"resize","height": 400,"width": 500},{"name":"extend","background_colour": "red","height": 700,"width": 600},{"name":"reflect"},{"name":"oilpaint","radius":2.6}]'
+```
 ## License
 ### [MIT](https://choosealicense.com/licenses/mit/)
 
