@@ -47,7 +47,7 @@ actions:
         output:
           help: The base64 data of output image.
           type: string
-        status_code:
+        statusCode:
           help: Http status code.
           type: int
   reflect:
@@ -73,7 +73,7 @@ actions:
         output:
           help: The base64 data of output image.
           type: string
-        status_code:
+        statusCode:
           help: Http status code.
           type: int
   extend:
@@ -89,7 +89,7 @@ actions:
         in: requestBody
         required: true
         help: The input image base64 data.
-      background_colour:
+      backgroundColour:
         type: string
         in: requestBody
         required: true
@@ -114,7 +114,7 @@ actions:
         output:
           help: The base64 data of output image.
           type: string
-        status_code:
+        statusCode:
           help: Http status code.
           type: int
   transparent:
@@ -130,7 +130,7 @@ actions:
         in: requestBody
         required: true
         help: The input image base64 data.
-      transparent_colour:
+      transparentColour:
         type: string
         in: requestBody
         required: true
@@ -145,7 +145,7 @@ actions:
         output:
           help: The base64 data of output image.
           type: string
-        status_code:
+        statusCode:
           help: Http status code.
           type: int
   format:
@@ -161,12 +161,12 @@ actions:
         in: requestBody
         required: true
         help: The input image base64 data.
-      input_extension:
+      inputExtension:
         type: string
         in: requestBody
         required: true
         help: The input image format.
-      output_extension:
+      outputExtension:
         type: string
         in: requestBody
         required: true
@@ -181,7 +181,7 @@ actions:
         output:
           help: The base64 data of output image.
           type: string
-        status_code:
+        statusCode:
           help: Http status code.
           type: int
   custom:
@@ -197,7 +197,7 @@ actions:
         in: requestBody
         required: true
         help: The input image base64 data.
-      customize_input:
+      customizeInput:
         type: list
         in: requestBody
         required: true
@@ -212,7 +212,7 @@ actions:
         output:
           help: The base64 data of output image.
           type: string
-        status_code:
+        statusCode:
           help: Http status code.
           type: int
   oilpaint:
@@ -243,6 +243,6 @@ actions:
         output:
           help: The base64 data of output image.
           type: string
-        status_code:
+        statusCode:
           help: Http status code.
           type: int

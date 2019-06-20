@@ -16,17 +16,17 @@ type ImageMagick struct {
 	InputImage        string  `json:"input,omitempty"`
 	Height            int     `json:"height,omitempty"`
 	Width             int     `json:"width,omitempty"`
-	Colour            string  `json:"background_colour,omitempty"`
-	TransparentColour string  `json:"transparent_colour,omitempty"`
-	OutputExtension   string  `json:"output_extension,omitempty"`
-	InputExtension    string  `json:"input_extension,omitempty"`
+	Colour            string  `json:"backgroundColour,omitempty"`
+	TransparentColour string  `json:"transparentColour,omitempty"`
+	OutputExtension   string  `json:"outputExtension,omitempty"`
+	InputExtension    string  `json:"inputExtension,omitempty"`
 	Radius            float64 `json:"radius,omitempty"`
 }
 
 //CustomArgs struct
 type CustomArgs struct {
 	InputImage  string     `json:"input,omitempty"`
-	CustomInput []Function `json:"customize_input,omitempty"`
+	CustomInput []Function `json:"customizeInput,omitempty"`
 }
 
 //Function struct
@@ -34,7 +34,7 @@ type Function struct {
 	Name             string  `json:"name,omitempty"`
 	Height           int     `json:"height,omitempty"`
 	Width            int     `json:"width,omitempty"`
-	BackgroundColour string  `json:"background_colour,omitempty"`
+	BackgroundColour string  `json:"backgroundColour,omitempty"`
 	Radius           float64 `json:"radius,omitempty"`
 }
 
@@ -42,7 +42,7 @@ type Function struct {
 type Message struct {
 	Success    string `json:"success"`
 	Message    string `json:"output"`
-	StatusCode int    `json:"statuscode"`
+	StatusCode int    `json:"statusCode"`
 }
 
 //Resize image
