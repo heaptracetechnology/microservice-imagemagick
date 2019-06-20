@@ -1,71 +1,89 @@
-# ImageMagick as a microservice
-An OMG service for ImageMagick, it is for displaying, converting, and editing raster image and vector image files.
+# _ImageMagick_ OMG Microservice
 
-[![Open Microservice Guide](https://img.shields.io/badge/OMG-enabled-brightgreen.svg?style=for-the-badge)](https://microservice.guide)
+[![Open Microservice Guide](https://img.shields.io/badge/OMG%20Enabled-👍-green.svg?)](https://microservice.guide)
 [![Build Status](https://travis-ci.com/heaptracetechnology/microservice-imagemagick.svg?branch=master)](https://travis-ci.com/heaptracetechnology/microservice-imagemagick)
 [![codecov](https://codecov.io/gh/heaptracetechnology/microservice-imagemagick/branch/master/graph/badge.svg)](https://codecov.io/gh/heaptracetechnology/microservice-imagemagick)
-<!-- [![GolangCI](https://golangci.com/badges/github.com/golangci/golangci-web.svg)](https://golangci.com) -->
 
+An OMG service for ImageMagick, it is for displaying, converting, and editing raster image and vector image files.
 
-## [OMG](hhttps://microservice.guide) CLI
-
-### OMG
-
-* omg validate
-```
-omg validate
-```
-* omg build
-```
-omg build
-```
-### Test Service
-
-* Test the service by following OMG commands
-
-### CLI
+## Direct usage in [Storyscript](https://storyscript.io/):
 
 ##### Resize image
-```sh
+```coffee
+>>> imagemagick resize input:'base64image' height:'resizeHight' width:'resizeWidth'
+{"success":"true/false","output":"Base64 output image","statusCode":"HTTPstatusCode"}
+```
+##### Reflect image
+```coffee
+>>> imagemagick reflect input:'base64image'
+{"success":"true/false","output":"Base64 output image","statusCode":"HTTPstatusCode"}
+```
+##### Extend image
+```coffee
+>>> imagemagick extend input:'base64image' height:'extendHight' width:'extendHight' backgroundColour:'colourName'
+{"success":"true/false","output":"Base64 output image","statusCode":"HTTPstatusCode"}
+```
+##### Transparent image
+```coffee
+>>> imagemagick transparent input:'base64image' transparentColour:'transparentColour'
+{"success":"true/false","output":"Base64 output image","statusCode":"HTTPstatusCode"}
+```
+##### Format image
+```coffee
+>>> imagemagick format input:'base64image' inputExtension:'inputImageExtension' outputExtension:'outputImageExtension'
+{"success":"true/false","output":"Base64 output image","statusCode":"HTTPstatusCode"}
+```
+##### OilPaint image
+```coffee
+>>> imagemagick oilpaint input:'base64image' radius:'radius'
+{"success":"true/false","output":"Base64 output image","statusCode":"HTTPstatusCode"}
+```
+##### Custom image
+```coffee
+>>> imagemagick custom input:'base64image' customizeInput:'[{"name":"resize","height": 400,"width": 500},{"name":"extend","backgroundColour": "red","height": 700,"width": 600},{"name":"reflect"},{"name":"oilpaint","radius":2.6}]'
+{"success":"true/false","output":"Base64 output image","statusCode":"HTTPstatusCode"}
+```
+
+Curious to [learn more](https://docs.storyscript.io/)?
+
+✨🍰✨
+
+## Usage with [OMG CLI](https://www.npmjs.com/package/omg)
+
+##### Resize image
+```shell
 $ omg run resize -a input=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH>
 ```
 ##### Reflect image
-```sh
+```shell
 $ omg run reflect -a input=<IMAGE_BASE64_DATA>
 ```
 ##### Extend image
-```sh
-$ omg run extend -a input=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH> -a background_colour=<COLOUR_NAME>
+```shell
+$ omg run extend -a input=<IMAGE_BASE64_DATA> -a height=<HEIGHT> -a width=<WIDTH> -a backgroundColour=<COLOUR_NAME>
 ```
 ##### Transparent image
-```sh
-$ omg run transparent -a input=<IMAGE_BASE64_DATA> -a transparent_colour=<COLOUR_NAME>
+```shell
+$ omg run transparent -a input=<IMAGE_BASE64_DATA> -a transparentColour=<COLOUR_NAME>
 ```
 ##### Format image
-```sh
-$ omg run format -a input=<IMAGE_BASE64_DATA> -a input_extension=<INPUT_EXTENSION> -a output_extension=<OUTPUT_EXTENSION>
+```shell
+$ omg run format -a input=<IMAGE_BASE64_DATA> -a inputExtension=<INPUT_EXTENSION> -a outputExtension=<OUTPUT_EXTENSION>
 ```
 ##### OilPaint image
-```sh
+```shell
 $ omg run oilpaint -a input=<IMAGE_BASE64_DATA> -a radius=<RADIUS>
 ```
 ##### Custom image
-```sh
-$ omg run custom -a input=<IMAGE_BASE64_DATA> -a customize_input=<CUSTOMIZE_INPUT>
+```shell
+$ omg run custom -a input=<IMAGE_BASE64_DATA> -a customizeInput=<CUSTOMIZE_INPUT>
 ```
 ##### Custom image Example
 ```
-$ omg run custom -a input=<IMAGE_BASE64_DATA> -a customize_input='[{"name":"resize","height": 400,"width": 500},{"name":"extend","background_colour": "red","height": 700,"width": 600},{"name":"reflect"},{"name":"oilpaint","radius":2.6}]'
+$ omg run custom -a input=<IMAGE_BASE64_DATA> -a customizeInput='[{"name":"resize","height": 400,"width": 500},{"name":"extend","backgroundColour": "red","height": 700,"width": 600},{"name":"reflect"},{"name":"oilpaint","radius":2.6}]'
 ```
-## License
-### [MIT](https://choosealicense.com/licenses/mit/)
 
-## Docker
-### Build
-```
-docker build -t microservice-imagemagick .
-```
-### RUN
-```
-docker run -p 3000:3000 microservice-imagemagick
-```
+**Note**: The OMG CLI requires [Docker](https://docs.docker.com/install/) to be installed.
+
+## License
+[MIT License](https://github.com/omg-services/imagemagick/blob/master/LICENSE).
